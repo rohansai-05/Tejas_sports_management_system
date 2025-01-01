@@ -5,8 +5,8 @@
   "main": "database.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon main.js",
-    "start:prod":"nodemon main.js"
+    "start": "nodemon index.js",
+    "start:prod":"nodemon index.js"
   },
   "keywords": [],
   "author": "",

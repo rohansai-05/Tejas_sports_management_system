@@ -79,7 +79,7 @@ The **Sports Session Management System** is a comprehensive web application that
 
 4. Start the application:  
    ```bash  
-   node app.js  
+   node main.js  
    ```  
 
 5. Open your browser and navigate to:  

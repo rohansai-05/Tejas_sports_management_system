@@ -122,7 +122,7 @@ We welcome contributions to make this project even better!
 - Feedback mechanism for players after sessions.  
 
 ---
-
+video explanation link : https://www.loom.com/share/b2a0b0409fce4afbaa9f8be9cc23103c?sid=08d79499-6119-4455-aba8-a03de1647341
 
 
 ### **Contact**  

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+      }
+
+      #admin-dashboard {
+        width: 100%;
+        padding: 20px;
+        background-color: #fff;
+        box-sizing: border-box;
+      }
+
+      header {
+        background-color: #4CAF50;
+        color: white;
+        padding: 15px;
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0;
+      }
+
+      .container.dashboard {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .logout {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .logout a {
+        text-decoration: none;
+        color: #4CAF50;
+        font-weight: bold;
+      }
+
+      .content {
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+
+      .content > div {
+        width: 100%;
+      }
+
+      .card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        width: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .card.sport-card {
+        background-color: #f1f1f1;
+        border: 2px solid #4CAF50;
+      }
+
+      .card.session-card {
+        background-color: #eaf6f2;
+        border: 2px solid #007bff;
+      }
+
+      .card.create-sport-card {
+        background-color: #f9f9f9;
+        border: 2px solid #4CAF50;
+      }
+
+      .card.create-session-card {
+        background-color: #e8f0fe;
+        border: 2px solid #007bff;
+      }
+
+      .card h3 {
+        margin-top: 0;
+        font-size: 1.5rem;
+        color: #333;
+      }
+
+      .card ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .card li {
+        padding: 5px 0;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      label {
+        font-size: 14px;
+        color: #333;
+      }
+
+      input, select, button {
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      .cancelled {
+        color: red;
+        font-weight: bold;
+        background-color: #fee;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 4px;
+        border: 1px solid #f8d7da;
+      }
+
+      .report-link {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .report-link:hover {
+        background-color: #0056b3;
+      }
+
+    </style>
+  </head>
+  <body id="admin-dashboard">
+    <header>
+      <h1>Welcome, <%= user.name %></h1>
+    </header>
+    <div class="container dashboard">
+      <div class="logout">
+        <a href="/logout">Logout</a>
+        <a href="/change-password">Change Password</a>
+      </div>
+      <section class="content">
+        <div>
+          <h2>Sports</h2>
+          <div class="card sport-card">
+            <ul>
+              <% sports.forEach(sport => { %>
+              <li><%= sport.name %></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+        
+        <div>
+          <h2>Create Sport</h2>
+          <div class="card create-sport-card">
+            <form action="/create-sport" method="POST">
+              <label for="name">Sport Name:</label>
+              <input type="text" name="name" id="name" required />
+              <button type="submit">Create Sport</button>
+            </form>
+          </div>
+        </div>
+        
+        <div>
+          <h2>All Sessions</h2>
+          <div class="card session-card">
+            <ul>
+              <% sessions.forEach(session => { %>
+              <li>
+                Sport: <%= session.sport_name %>, Teams: <%= session.team1 %> vs
+                <%= session.team2 %>, Date: <%= session.date %>, Venue: <%=
+                session.venue %>
+                <br />Created by: <%= session.creator_name %> <br />Players:
+                <ul>
+                  <% session.players.forEach(player => { %>
+                  <li><%= player.name %></li>
+                  <% }) %>
+                </ul>
+                <% if (session.cancelled) { %>
+                <div class="cancelled">
+                  Cancelled: <%= session.cancellation_reason %>
+                </div>
+                <% } %>
+                <form action="/delete-session" method="POST">
+                  <input
+                    type="hidden"
+                    name="session_id"
+                    value="<%= session.id %>"
+                  />
+                  <button type="submit">Delete</button>
+                </form>
+                <form action="/join-session" method="POST">
+                  <input
+                    type="hidden"
+                    name="session_id"
+                    value="<%= session.id %>"
+                  />
+                  <button type="submit">Join</button>
+                </form>
+              </li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+        
+        <div>
+          <h2>Create Session</h2>
+          <div class="card create-session-card">
+            <form action="/create-session" method="POST">
+              <label for="sport_id">Sport:</label>
+              <select name="sport_id" id="sport_id" required>
+                <% sports.forEach(sport => { %>
+                <option value="<%= sport.id %>"><%= sport.name %></option>
+                <% }) %>
+              </select>
+              <label for="team1">Team 1:</label>
+              <input type="text" name="team1" id="team1" required />
+              <label for="team2">Team 2:</label>
+              <input type="text" name="team2" id="team2" required />
+              <label for="additional_players">Additional Players:</label>
+              <input
+                type="number"
+                name="additional_players"
+                id="additional_players"
+                required
+              />
+              <label for="date">Date:</label>
+              <input type="datetime-local" name="date" id="date" required />
+              <label for="venue">Venue:</label>
+              <input type="text" name="venue" id="venue" required />
+              <button type="submit">Create Session</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <a href="/reports" class="report-link">View Reports</a>
+    </div>
+  </body>
+</html>
